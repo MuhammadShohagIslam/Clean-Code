@@ -149,3 +149,120 @@ function logError(errorMessage) {
 
 log("ABC");
 logError("An Error!");
+
+/* 
+    ***Three-Argument-Function(Dealing With Too Many Values) ***
+
+*/
+class User {
+    constructor(name, age, email) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+    }
+}
+
+const user = new User("A", 31, "a@gmail.com");
+
+// good one above modifier
+class User {
+    constructor(userData) {
+        this.name = userData.name;
+        this.age = userData.age;
+        this.email = userData.email;
+    }
+}
+
+const user = new User({ name: "A", age: 31, email: "a@gmail.com" });
+
+// bad one
+function compare(a, b, comparator) {
+    if (comparator === "equal") {
+        return a === b;
+    } else if (comparator === "not equal") {
+        return a !== b;
+    } else if (comparator === "greater") {
+        return a > b;
+    } else if (comparator === "smaller") {
+        return a < b;
+    }
+}
+
+const isSmaller = compare(3, 5, "smaller");
+const isEqual = compare(3, 5, "equal");
+
+// good one by modifier
+function compare(comparisionData) {
+    const { first, second, comparator } = comparisionData;
+    if (comparator === "equal") {
+        return first === second;
+    } else if (comparator === "not equal") {
+        return first !== second;
+    } else if (comparator === "greater") {
+        return first > second;
+    } else if (comparator === "smaller") {
+        return first < second;
+    }
+}
+
+const isSmaller = compare({ first: 3, second: 5, comparator: "smaller" });
+const isSmaller = compare({ comparator: "equal", first: 3, second: 5 });
+
+/* 
+    *** Infinity-Argument-Function ***
+    Functions With A Dynamic Number Of Parameters
+*/
+function sumUp(...numbers){
+    let sum = 0;
+    for(const number of numbers){
+        sum += number;
+    }
+}
+
+const total = sumUp();
+
+// const total = sumUp([10,20,3,-3,4]);
+
+/*
+    *** Beware Of "Output Parameters" ***
+        => Try to avoid output arguments - especially if they are unexpected, but framework, other libraries we can not avoid it.
+        => but if we need, we can use okay one, another one is good one.
+*/
+// bad one: not great- user gets modified in an unexpected way
+function createId(user){
+    user.id = "ui"
+}
+
+const user = {
+    name: "a"
+}
+// we might not expected user created id, instead it is return id and finally store in the obect.
+// const id = createId(user);
+createId(user);
+
+// okay one: user gets modified, but the function implies it
+function addId(user){
+    user.id = "ui"
+}
+
+const user = {
+    name: "a"
+}
+addId(user);
+
+console.log(user)
+
+// Good one: it's obvious, that the user will get modified.
+class User{
+    constructor(name){
+        this.name = name;
+    }
+
+    addId(){
+        this.id = "ui"
+    }
+}
+
+const customer = new User("A");
+customer.addId();
+console.log(customer);
